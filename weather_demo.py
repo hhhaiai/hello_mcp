@@ -1196,13 +1196,19 @@ CITY_CODES = {
   }
 }
 
-def get_weather(city):
+
+def get_weather(city: str) -> str:
     try:
         area_id = CITY_CODES[city][city]['AREAID']
         url = f'http://t.weather.itboy.net/api/weather/city/{area_id}'
         response = requests.get(url)
         response.raise_for_status()
-        return response.json()
+        # return response.json()
+        data = response.json()
+        # 删除不需要的消息字段
+        if 'message' in data:
+            del data['message']
+        return data
     except KeyError:
         return {'error': 'City not found'}
     except requests.exceptions.RequestException as e:
